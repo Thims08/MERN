@@ -9,7 +9,7 @@ const taskSchema = mongoose.Schema(
         completed : {
             type: Boolean,
             required: true,
-            defaut: false
+            default: false
         }
 
     },
@@ -18,6 +18,6 @@ const taskSchema = mongoose.Schema(
     }
 )
 
-const Task = mongoose.model("Task",taskSchema);
+const Task = mongoose.model("Taskkkk",taskSchema);
 
 module.exports = Task
