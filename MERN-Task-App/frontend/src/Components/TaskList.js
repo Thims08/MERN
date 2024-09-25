@@ -1,15 +1,18 @@
 import TaskForm from "./TaskForm"
 import Task from "./Task"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
 import {toast} from "react-toastify"
-
+import loader from "../tenor.gif"
 
 const TaskList = () => {
   const [formData,setformData] = useState ({
     name : "",
     completed : false
   })
+  const [taskss,settaskss] = useState ([])
+  const [completedtasks,setcompletedtasks] = useState ([])
+  const [isLoading,setisLoading]=useState(false)
   
   const {name} = formData;
   
@@ -20,6 +23,25 @@ const TaskList = () => {
         name : value
       })
   }
+
+  const getTasks = async () => {
+    setisLoading(true)
+    try{
+      const response = await axios.get(`http://localhost:5000/api/tasks`)
+      const {data}= response
+      settaskss(data)
+      console.log(response)
+      setisLoading(false)
+    }
+    catch(error){
+      toast.error(error.message)
+      setisLoading(false)
+    }
+  }
+
+  useEffect ( () => {
+    getTasks()
+  },[])
 
   const createtask = async (e) => {
        e.preventDefault()
@@ -39,7 +61,7 @@ const TaskList = () => {
           toast.error(error.message)
        }
   }
-
+  
   
   
   return (
@@ -57,6 +79,16 @@ const TaskList = () => {
           </div>
           
           <hr/>
+          {
+            isLoading && (
+               <div className="--flex-center">
+                <img src={loader} alt="iiii"/>
+
+               </div>
+            )
+            
+            
+          }
           <Task/>
     </div>
   )
