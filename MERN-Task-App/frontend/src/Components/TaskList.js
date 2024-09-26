@@ -3,7 +3,8 @@ import Task from "./Task"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import {toast} from "react-toastify"
-import loader from "../tenor.gif"
+import loader from "../loader.gif"
+import { get } from "mongoose"
 
 const TaskList = () => {
   const [formData,setformData] = useState ({
@@ -13,6 +14,7 @@ const TaskList = () => {
   const [taskss,settaskss] = useState ([])
   const [completedtasks,setcompletedtasks] = useState ([])
   const [isLoading,setisLoading]=useState(false)
+  const [isEditing,setisEditing]=useState(false)
   
   const {name} = formData;
   
@@ -30,7 +32,7 @@ const TaskList = () => {
       const response = await axios.get(`http://localhost:5000/api/tasks`)
       const {data}= response
       settaskss(data)
-      console.log(response)
+      
       setisLoading(false)
     }
     catch(error){
@@ -38,6 +40,21 @@ const TaskList = () => {
       setisLoading(false)
     }
   }
+
+  const deleteTasks = async (identity) => {
+    setisLoading(true)
+    try{
+      await axios.delete(`http://localhost:5000/api/tasks/${identity}`)
+      getTasks()
+      
+      setisLoading(false)
+    }
+    catch(error){
+      toast.error(error.message)
+      setisLoading(false)
+    }
+  }
+
 
   useEffect ( () => {
     getTasks()
@@ -56,18 +73,25 @@ const TaskList = () => {
             ...formData,
             name : ""
            })
+           getTasks()
        }
        catch(error){
           toast.error(error.message)
        }
   }
   
+  const changeisEditing = async (identity) => {
+    setisEditing(!isEditing)
+  }
+  const Updatetask = async (identity) => {
+        console.log(56363636336)
+  }
   
   
   return (
     <div>
         <h2>Task Manager</h2>
-        <TaskForm name = {name} handleinputchange ={handleinputchange} createtask={createtask}/>
+        <TaskForm name = {name} handleinputchange ={handleinputchange} createtask={createtask} isEditing={isEditing}/>
         <div className="--flex-between --pb">
             
             <p>
@@ -79,17 +103,30 @@ const TaskList = () => {
           </div>
           
           <hr/>
-          {
-            isLoading && (
-               <div className="--flex-center">
+         {isLoading && (
+              <div className="--flex-center">
                 <img src={loader} alt="iiii"/>
-
-               </div>
+              </div>
+         )}
+         {(!isLoading && taskss.length===0)?(
+             <div>
+             <p>Empty , Enter Tasks</p>
+             
+             </div>
+         ):
+         (  
+             
+            
+            taskss.map( (ele,i) => {
+            return(
+              <Task key={ele._id} i={i} ele={ele} deleteTasks={deleteTasks} changeisEditing={changeisEditing}/>
             )
+            })
+          
             
-            
-          }
-          <Task/>
+        
+         )
+         }
     </div>
   )
 }
