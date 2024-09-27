@@ -525,6 +525,15 @@ a:hover {
 
 .completed {
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: #eee;
+  padding: 10px;
+  margin: 7px 0;
+  animation: slide-in ease 0.5s;
+  
 }
 
 .completed::after {

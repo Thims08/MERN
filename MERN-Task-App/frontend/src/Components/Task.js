@@ -1,11 +1,12 @@
 import { MdModeEdit } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
-const Task = ({ele,i,deleteTasks,changeisEditing}) => {
+const Task = ({ele,i,deleteTasks,getSingletask,completedfunction}) => {
   
   
   return (
-    <div className="task">
+    
+    <div className={(ele.completed)?"completed":"task"}>
         
             <div>
             <p>
@@ -16,13 +17,12 @@ const Task = ({ele,i,deleteTasks,changeisEditing}) => {
           
         
         <div className="task-icons">
-        <MdModeEdit />
-        <FaCheck onClick={() => changeisEditing(ele._id)}/>
+        <MdModeEdit  onClick={() => getSingletask(ele)}/>
+        <FaCheck onClick={() => completedfunction(ele)}/>
         <FaRegTrashAlt onClick={() => deleteTasks(ele._id)}/>
         </div>
     </div>
-    
-  )
+    )
 }
 
 export default Task
